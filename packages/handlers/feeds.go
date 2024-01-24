@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func HandlerCreateFeed(ctx *fiber.Ctx) {
+func HandlerCreateFeed(ctx *fiber.Ctx, usr config.User) {
 	type parameters struct {
 		Name string `json:"name"`
 		URL  string `json:"url"`
@@ -33,6 +33,7 @@ func HandlerCreateFeed(ctx *fiber.Ctx) {
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
+		UserID:    usr.ID,
 		Name:      params.Name,
 		Url:       params.URL,
 	})
