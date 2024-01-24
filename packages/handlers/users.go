@@ -12,7 +12,7 @@ import (
 )
 
 func HandlerCreateUser(ctx *fiber.Ctx) {
-	type request struct {
+	type parameters struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	}
@@ -23,7 +23,7 @@ func HandlerCreateUser(ctx *fiber.Ctx) {
 		Name      string    `json:"name"`
 		ApiKey    string    `json:"api_key"`
 	}
-	params := request{}
+	params := parameters{}
 
 	if err := ctx.BodyParser(&params); err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
@@ -36,8 +36,11 @@ func HandlerCreateUser(ctx *fiber.Ctx) {
 	}
 
 	usr, err := config.DBQueris.CreateUser(ctx.Context(), config.CreateUserParams{
-		Name:     params.Name,
-		Password: string(encrPass),
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      params.Name,
+		Password:  string(encrPass),
 	})
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
@@ -52,8 +55,29 @@ func HandlerCreateUser(ctx *fiber.Ctx) {
 	})
 }
 
-func HandlerGetUserById(ctx *fiber.Ctx) {
+func HandlerGetUserByKey(ctx *fiber.Ctx) {
+	type payload struct {
+		Id        uuid.UUID `json:"id"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+		Name      string    `json:"name"`
+		ApiKey    string    `json:"api_key"`
+	}
+	apiKey := ctx.Params("api_key")
 
+	usr, err := config.DBQueris.GetUserById(ctx.Context(), apiKey)
+	if err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	utils.RespondWithJSON(ctx, 200, payload{
+		Id:        usr.ID,
+		CreatedAt: usr.CreatedAt,
+		UpdatedAt: usr.UpdatedAt,
+		Name:      usr.Name,
+		ApiKey:    usr.ApiKey,
+	})
 }
 
 func HandlerUserLogin(ctx *fiber.Ctx) {

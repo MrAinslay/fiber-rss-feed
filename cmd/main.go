@@ -17,3 +17,7 @@ func initDatabase() {
 	}
 	config.DBQueris = config.New(db)
 }
+
+func main() {
+	initDatabase()
+}

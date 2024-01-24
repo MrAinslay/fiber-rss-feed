@@ -6,9 +6,11 @@ import (
 )
 
 var RegisterFeedRoutes = func(app fiber.App) {
-	app.Get("/v1/api/users/:id", handlers.HandlerGetUserById)
+	app.Get("/v1/api/users/:api_key", handlers.HandlerGetUserByKey)
 	app.Get("/v1/api/posts/:id", handlers.HandlerGetPostById)
+	app.Get("/v1/api/feeds/:id", handlers.HnadlerGetFeedById)
 	app.Get("/v1/api/posts", handlers.HandlerGetPosts)
+	app.Get("/v1/api/feeds", handlers.HandlerGetFeeds)
 	app.Post("/v1/api/users", handlers.HandlerCreateUser)
 	app.Post("/v1/api/login", handlers.HandlerUserLogin)
 	app.Post("/v1/api/posts", handlers.HandlerCreatePost)
