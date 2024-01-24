@@ -50,3 +50,30 @@ func HandlerCreateFeed(ctx *fiber.Ctx, usr config.User) {
 		URL:       feed.Url,
 	})
 }
+
+func HandlerGetFeeds(ctx *fiber.Ctx) {
+	feeds, err := config.DBQueris.GetAllFeeds(ctx.Context())
+	if err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	utils.RespondWithJSON(ctx, 200, feeds)
+}
+
+func HnadlerGetFeedById(ctx *fiber.Ctx) {
+	id := ctx.Params("id")
+	uuid, err := uuid.Parse(id)
+	if err != nil {
+		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+		return
+	}
+
+	feed, err := config.DBQueris.GetFeedById(ctx.Context(), uuid)
+	if err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	utils.RespondWithJSON(ctx, 201, feed)
+}
