@@ -1,6 +1,9 @@
 package routes
 
-import "github.com/gofiber/fiber"
+import (
+	"github.com/MrAinslay/fiber-rss-feed/packages/handlers"
+	"github.com/gofiber/fiber"
+)
 
 var RegisterFeedRoutes = func(app fiber.App) {
 	app.Get("/v1/api/users/:id", handlers.HandlerGetUserById)
