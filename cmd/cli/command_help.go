@@ -8,4 +8,6 @@ func commandHelp(cfg *ApiConfig, s string) error {
 	for _, cmd := range getCommands() {
 		log.Println("%s: %s\n", cmd.name, cmd.description)
 	}
+	log.Println("")
+	return nil
 }
