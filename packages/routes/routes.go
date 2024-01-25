@@ -16,7 +16,6 @@ var RegisterFeedRoutes = func(app *fiber.App) {
 	app.Post("/v1/api/feeds", middleware.MiddlewareAuth(handlers.HandlerCreateFeed))
 	app.Post("/v1/api/users", handlers.HandlerCreateUser)
 	app.Post("/v1/api/login", handlers.HandlerUserLogin)
-	app.Post("/v1/api/posts", handlers.HandlerCreatePost)
 	app.Put("/v1/api/users", middleware.MiddlewareAuth(handlers.HandlerUpdateUser))
 	app.Delete("/v1/api/users", middleware.MiddlewareAuth(handlers.HandlerDeleteUser))
 	app.Delete("/v1/api/feeds", middleware.MiddlewareAuth(handlers.HandlerDeleteFeed))
