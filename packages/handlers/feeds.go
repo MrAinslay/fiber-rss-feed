@@ -60,7 +60,7 @@ func HandlerGetFeeds(ctx *fiber.Ctx) {
 	utils.RespondWithJSON(ctx, 200, feeds)
 }
 
-func HnadlerGetFeedById(ctx *fiber.Ctx) {
+func HandlerGetFeedById(ctx *fiber.Ctx) {
 	uuid, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
