@@ -15,7 +15,7 @@ import (
 const createFeed = `-- name: CreateFeed :one
 INSERT INTO feeds (id, created_at, updated_at, user_id, url, name)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, created_at, updated_at, user_id, url, name
+RETURNING id, created_at, updated_at, user_id, url, name, last_fetched_at
 `
 
 type CreateFeedParams struct {
@@ -44,13 +44,14 @@ func (q *Queries) CreateFeed(ctx context.Context, arg CreateFeedParams) (Feed, e
 		&i.UserID,
 		&i.Url,
 		&i.Name,
+		&i.LastFetchedAt,
 	)
 	return i, err
 }
 
 const deleteFeed = `-- name: DeleteFeed :one
 DELETE FROM feeds WHERE id = $1
-RETURNING id, created_at, updated_at, user_id, url, name
+RETURNING id, created_at, updated_at, user_id, url, name, last_fetched_at
 `
 
 func (q *Queries) DeleteFeed(ctx context.Context, id uuid.UUID) (Feed, error) {
@@ -63,12 +64,13 @@ func (q *Queries) DeleteFeed(ctx context.Context, id uuid.UUID) (Feed, error) {
 		&i.UserID,
 		&i.Url,
 		&i.Name,
+		&i.LastFetchedAt,
 	)
 	return i, err
 }
 
 const getAllFeeds = `-- name: GetAllFeeds :many
-SELECT id, created_at, updated_at, user_id, url, name FROM feeds
+SELECT id, created_at, updated_at, user_id, url, name, last_fetched_at FROM feeds
 `
 
 func (q *Queries) GetAllFeeds(ctx context.Context) ([]Feed, error) {
@@ -87,6 +89,7 @@ func (q *Queries) GetAllFeeds(ctx context.Context) ([]Feed, error) {
 			&i.UserID,
 			&i.Url,
 			&i.Name,
+			&i.LastFetchedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -102,7 +105,7 @@ func (q *Queries) GetAllFeeds(ctx context.Context) ([]Feed, error) {
 }
 
 const getFeedById = `-- name: GetFeedById :one
-SELECT id, created_at, updated_at, user_id, url, name FROM feeds WHERE id = $1
+SELECT id, created_at, updated_at, user_id, url, name, last_fetched_at FROM feeds WHERE id = $1
 `
 
 func (q *Queries) GetFeedById(ctx context.Context, id uuid.UUID) (Feed, error) {
@@ -115,6 +118,7 @@ func (q *Queries) GetFeedById(ctx context.Context, id uuid.UUID) (Feed, error) {
 		&i.UserID,
 		&i.Url,
 		&i.Name,
+		&i.LastFetchedAt,
 	)
 	return i, err
 }

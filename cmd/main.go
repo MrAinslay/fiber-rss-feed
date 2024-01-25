@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"time"
 
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
 	"github.com/MrAinslay/fiber-rss-feed/packages/routes"
+	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
 	"github.com/gofiber/fiber"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -26,5 +28,6 @@ func main() {
 	app := fiber.New()
 	routes.RegisterFeedRoutes(app)
 
+	go utils.StartScraping(10, time.Minute)
 	log.Fatal(app.Listen(8080))
 }
