@@ -11,8 +11,12 @@ import (
 )
 
 func HandlerCreatePostLike(ctx *fiber.Ctx, usr config.User) {
-	postUUID, err := uuid.Parse(ctx.Params("id"))
-	if err != nil {
+	type parameters struct {
+		PostId uuid.UUID `json:"post_id"`
+	}
+
+	params := parameters{}
+	if err := ctx.BodyParser(&params); err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
 		return
 	}
@@ -21,7 +25,7 @@ func HandlerCreatePostLike(ctx *fiber.Ctx, usr config.User) {
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UserID:    usr.ID,
-		PostID:    postUUID,
+		PostID:    params.PostId,
 	})
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))

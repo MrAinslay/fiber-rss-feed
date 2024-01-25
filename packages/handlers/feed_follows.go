@@ -20,8 +20,12 @@ func HandlerGetUserFeedFollows(ctx *fiber.Ctx, usr config.User) {
 }
 
 func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
-	feedUuid, err := uuid.Parse(ctx.Params("id"))
-	if err != nil {
+	type parameters struct {
+		FeedId uuid.UUID `json:"feed_id"`
+	}
+
+	params := parameters{}
+	if err := ctx.BodyParser(&params); err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
 		return
 	}
@@ -30,7 +34,7 @@ func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UserID:    usr.ID,
-		FeedID:    feedUuid,
+		FeedID:    params.FeedId,
 	})
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
