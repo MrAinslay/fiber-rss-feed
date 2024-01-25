@@ -46,6 +46,25 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const deleteUser = `-- name: DeleteUser :one
+DELETE FROM users WHERE api_key = $1
+RETURNING id, created_at, updated_at, name, password, api_key
+`
+
+func (q *Queries) DeleteUser(ctx context.Context, apiKey string) (User, error) {
+	row := q.db.QueryRowContext(ctx, deleteUser, apiKey)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Name,
+		&i.Password,
+		&i.ApiKey,
+	)
+	return i, err
+}
+
 const getUserById = `-- name: GetUserById :one
 SELECT id, created_at, updated_at, name, password, api_key FROM users WHERE api_key = $1
 `
@@ -70,6 +89,39 @@ SELECT id, created_at, updated_at, name, password, api_key FROM users WHERE name
 
 func (q *Queries) GetUserByName(ctx context.Context, name string) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserByName, name)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Name,
+		&i.Password,
+		&i.ApiKey,
+	)
+	return i, err
+}
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE users
+SET name = $1, password = $2, updated_at = $3
+WHERE api_key = $4
+RETURNING id, created_at, updated_at, name, password, api_key
+`
+
+type UpdateUserParams struct {
+	Name      string
+	Password  string
+	UpdatedAt time.Time
+	ApiKey    string
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, updateUser,
+		arg.Name,
+		arg.Password,
+		arg.UpdatedAt,
+		arg.ApiKey,
+	)
 	var i User
 	err := row.Scan(
 		&i.ID,

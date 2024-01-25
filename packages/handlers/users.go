@@ -124,3 +124,79 @@ func HandlerUserLogin(ctx *fiber.Ctx) {
 		ApiKey:    usr.ApiKey,
 	})
 }
+
+func HandlerUpdateUser(ctx *fiber.Ctx, usr config.User) {
+	type parameters struct {
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+	type payload struct {
+		Id        uuid.UUID `json:"id"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+		Name      string    `json:"name"`
+		ApiKey    string    `json:"api_key"`
+	}
+
+	params := parameters{}
+	if err := ctx.BodyParser(&params); err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	if params.Name == "" {
+		params.Name = usr.Name
+	}
+
+	var encrPass []byte
+	var err error
+	if params.Password == "" {
+		params.Password = usr.Password
+		encrPass = []byte(params.Password)
+	} else {
+		encrPass, err = bcrypt.GenerateFromPassword([]byte(params.Password), 10)
+		if err != nil {
+			utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+			return
+		}
+	}
+
+	upUsr, err := config.DBQueris.UpdateUser(ctx.Context(), config.UpdateUserParams{
+		Name:      params.Name,
+		Password:  string(encrPass),
+		UpdatedAt: time.Now(),
+		ApiKey:    usr.ApiKey,
+	})
+	if err != nil {
+		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+		return
+	}
+
+	utils.RespondWithJSON(ctx, 201, payload{
+		Id:        upUsr.ID,
+		CreatedAt: upUsr.CreatedAt,
+		UpdatedAt: upUsr.UpdatedAt,
+		Name:      upUsr.Name,
+		ApiKey:    upUsr.ApiKey,
+	})
+}
+
+func HandlerDeleteUser(ctx *fiber.Ctx, usr config.User) {
+	type payload struct {
+		Id        uuid.UUID `json:"id"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+		Name      string    `json:"name"`
+		ApiKey    string    `json:"api_key"`
+	}
+
+	delUsr, _ := config.DBQueris.DeleteUser(ctx.Context(), usr.ApiKey)
+
+	utils.RespondWithJSON(ctx, 201, payload{
+		Id:        delUsr.ID,
+		CreatedAt: delUsr.CreatedAt,
+		UpdatedAt: time.Now(),
+		Name:      delUsr.Name,
+		ApiKey:    delUsr.ApiKey,
+	})
+}

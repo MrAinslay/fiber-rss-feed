@@ -10,6 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
+func HandlerGetUserFeedFollows(ctx *fiber.Ctx, usr config.User) {
+	follows, err := config.DBQueris.GetFeedFollows(ctx.Context(), usr.ID)
+	if err != nil {
+		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+	}
+
+	utils.RespondWithJSON(ctx, 201, follows)
+}
+
 func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
 	id := ctx.Params("id")
 	feedUuid, err := uuid.Parse(id)
