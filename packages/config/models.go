@@ -40,6 +40,14 @@ type Post struct {
 	FeedID      uuid.UUID
 }
 
+type PostLike struct {
+	ID        uuid.UUID
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	UserID    uuid.UUID
+	PostID    uuid.UUID
+}
+
 type User struct {
 	ID        uuid.UUID
 	CreatedAt time.Time

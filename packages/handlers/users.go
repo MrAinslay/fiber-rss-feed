@@ -181,21 +181,7 @@ func HandlerUpdateUser(ctx *fiber.Ctx, usr config.User) {
 }
 
 func HandlerDeleteUser(ctx *fiber.Ctx, usr config.User) {
-	type payload struct {
-		Id        uuid.UUID `json:"id"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
-		Name      string    `json:"name"`
-		ApiKey    string    `json:"api_key"`
-	}
+	config.DBQueris.DeleteUser(ctx.Context(), usr.ApiKey)
 
-	delUsr, _ := config.DBQueris.DeleteUser(ctx.Context(), usr.ApiKey)
-
-	utils.RespondWithJSON(ctx, 201, payload{
-		Id:        delUsr.ID,
-		CreatedAt: delUsr.CreatedAt,
-		UpdatedAt: time.Now(),
-		Name:      delUsr.Name,
-		ApiKey:    delUsr.ApiKey,
-	})
+	utils.RespondWithJSON(ctx, 201, fmt.Sprintf("Successfully deleted user with id %s", usr.ID))
 }

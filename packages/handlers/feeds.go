@@ -61,8 +61,7 @@ func HandlerGetFeeds(ctx *fiber.Ctx) {
 }
 
 func HnadlerGetFeedById(ctx *fiber.Ctx) {
-	id := ctx.Params("id")
-	uuid, err := uuid.Parse(id)
+	uuid, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
 		return
@@ -78,8 +77,7 @@ func HnadlerGetFeedById(ctx *fiber.Ctx) {
 }
 
 func HandlerDeleteFeed(ctx *fiber.Ctx, usr config.User) {
-	id := ctx.Params("id")
-	feedUUID, err := uuid.Parse(id)
+	feedUUID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
 		return
@@ -97,5 +95,5 @@ func HandlerDeleteFeed(ctx *fiber.Ctx, usr config.User) {
 	}
 
 	config.DBQueris.DeleteFeed(ctx.Context(), feed.ID)
-	utils.RespondWithJSON(ctx, 201, feed)
+	utils.RespondWithJSON(ctx, 201, fmt.Sprintf("Successfully deleted feed with id %s", feedUUID))
 }
