@@ -32,7 +32,6 @@ func HandlerCreateFeed(ctx *fiber.Ctx, usr config.User) {
 	feed, err := config.DBQueris.CreateFeed(ctx.Context(), config.CreateFeedParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
 		UserID:    usr.ID,
 		Name:      params.Name,
 		Url:       params.URL,

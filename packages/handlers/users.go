@@ -39,7 +39,6 @@ func HandlerCreateUser(ctx *fiber.Ctx) {
 	usr, err := config.DBQueris.CreateUser(ctx.Context(), config.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
 		Name:      params.Name,
 		Password:  string(encrPass),
 	})
