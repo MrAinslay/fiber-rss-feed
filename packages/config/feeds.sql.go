@@ -48,6 +48,25 @@ func (q *Queries) CreateFeed(ctx context.Context, arg CreateFeedParams) (Feed, e
 	return i, err
 }
 
+const deleteFeed = `-- name: DeleteFeed :one
+DELETE FROM feeds WHERE id = $1
+RETURNING id, created_at, updated_at, user_id, url, name
+`
+
+func (q *Queries) DeleteFeed(ctx context.Context, id uuid.UUID) (Feed, error) {
+	row := q.db.QueryRowContext(ctx, deleteFeed, id)
+	var i Feed
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.UserID,
+		&i.Url,
+		&i.Name,
+	)
+	return i, err
+}
+
 const getAllFeeds = `-- name: GetAllFeeds :many
 SELECT id, created_at, updated_at, user_id, url, name FROM feeds
 `

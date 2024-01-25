@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber"
 )
 
-var RegisterFeedRoutes = func(app fiber.App) {
+var RegisterFeedRoutes = func(app *fiber.App) {
 	app.Get("/v1/api/users/:api_key", handlers.HandlerGetUserByKey)
 	app.Get("/v1/api/posts/:id", handlers.HandlerGetPostById)
 	app.Get("/v1/api/feeds/:id", handlers.HnadlerGetFeedById)

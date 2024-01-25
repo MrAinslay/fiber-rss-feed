@@ -6,11 +6,14 @@ import (
 	"os"
 
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
+	"github.com/MrAinslay/fiber-rss-feed/packages/routes"
+	"github.com/gofiber/fiber"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 func initDatabase() {
-	godotenv.Load("Kkey.env")
+	godotenv.Load("key.env")
 	db, err := sql.Open("postgres", os.Getenv("GOOSE_DBSTRING"))
 	if err != nil {
 		log.Fatal(err)
@@ -20,4 +23,8 @@ func initDatabase() {
 
 func main() {
 	initDatabase()
+	app := fiber.New()
+	routes.RegisterFeedRoutes(app)
+
+	log.Fatal(app.Listen(8080))
 }

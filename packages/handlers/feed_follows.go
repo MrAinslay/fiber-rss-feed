@@ -32,3 +32,26 @@ func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
 
 	utils.RespondWithJSON(ctx, 200, feedFollows)
 }
+
+func HandlerDeleteFeedFollow(ctx *fiber.Ctx, usr config.User) {
+	id := ctx.Params("id")
+	followUUID, err := uuid.Parse(id)
+	if err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	follow, err := config.DBQueris.GetFeedById(ctx.Context(), followUUID)
+	if err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	if follow.UserID != usr.ID {
+		utils.RespondWithErr(ctx, 501, "Not authorized")
+		return
+	}
+
+	config.DBQueris.DeleteFeed(ctx.Context(), followUUID)
+	utils.RespondWithJSON(ctx, 201, follow)
+}

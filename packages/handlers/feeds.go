@@ -77,3 +77,26 @@ func HnadlerGetFeedById(ctx *fiber.Ctx) {
 
 	utils.RespondWithJSON(ctx, 201, feed)
 }
+
+func HandlerDeleteFeed(ctx *fiber.Ctx, usr config.User) {
+	id := ctx.Params("id")
+	feedUUID, err := uuid.Parse(id)
+	if err != nil {
+		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
+		return
+	}
+
+	feed, err := config.DBQueris.GetFeedById(ctx.Context(), feedUUID)
+	if err != nil {
+		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+		return
+	}
+
+	if feed.UserID != usr.ID {
+		utils.RespondWithErr(ctx, 501, "Not authorized")
+		return
+	}
+
+	config.DBQueris.DeleteFeed(ctx.Context(), feed.ID)
+	utils.RespondWithJSON(ctx, 201, feed)
+}
