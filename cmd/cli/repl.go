@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -10,8 +11,8 @@ import (
 )
 
 type ApiConfig struct {
-	apiClient api.Client
-	apiKey    string
+	ApiClient api.Client
+	ApiKey    string
 }
 
 type cliCommand struct {
@@ -30,7 +31,7 @@ func printPrompt() {
 	log.Print("Rss-Feed > ")
 }
 
-func startRepl(cfg *ApiConfig) {
+func StartRepl(cfg *ApiConfig) {
 	commands := getCommands()
 
 	reader := bufio.NewScanner(os.Stdin)
@@ -40,7 +41,7 @@ func startRepl(cfg *ApiConfig) {
 		splitText := strings.Split(text, " ")
 		if command, exists := commands[splitText[0]]; exists {
 			if len(splitText) > 1 {
-				err := command.callback(cfg, splitText[1])
+				err := command.callback(cfg, fmt.Sprint(splitText[1:]))
 				if err != nil {
 					log.Println(err)
 				}
@@ -63,6 +64,11 @@ func getCommands() map[string]cliCommand {
 			name:        "help",
 			description: "Displays a help message",
 			callback:    commandHelp,
+		},
+		"create": {
+			name:        "create",
+			description: "Creates either a user or a feed depending on the selected option",
+			callback:    commandCreate,
 		},
 	}
 }
