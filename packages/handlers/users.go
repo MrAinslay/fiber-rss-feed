@@ -59,7 +59,7 @@ func HandlerCreateUser(ctx *fiber.Ctx) {
 	})
 }
 
-func HandlerGetUserByKey(ctx *fiber.Ctx) {
+func HandlerGetUserByKey(ctx *fiber.Ctx, usr config.User) {
 	type payload struct {
 		Id        uuid.UUID `json:"id"`
 		CreatedAt time.Time `json:"created_at"`
@@ -67,9 +67,8 @@ func HandlerGetUserByKey(ctx *fiber.Ctx) {
 		Name      string    `json:"name"`
 		ApiKey    string    `json:"api_key"`
 	}
-	apiKey := ctx.Params("api_key")
 
-	usr, err := config.DBQueris.GetUserById(ctx.Context(), apiKey)
+	usr, err := config.DBQueris.GetUserById(ctx.Context(), usr.ApiKey)
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
 		return

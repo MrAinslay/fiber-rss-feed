@@ -7,7 +7,7 @@ import (
 )
 
 var RegisterFeedRoutes = func(app *fiber.App) {
-	app.Get("/v1/api/users/:api_key", handlers.HandlerGetUserByKey)
+	app.Get("/v1/api/users", middleware.MiddlewareAuth(handlers.HandlerGetUserByKey))
 	app.Post("/v1/api/users", handlers.HandlerCreateUser)
 	app.Post("/v1/api/login", handlers.HandlerUserLogin)
 	app.Put("/v1/api/users", middleware.MiddlewareAuth(handlers.HandlerUpdateUser))
