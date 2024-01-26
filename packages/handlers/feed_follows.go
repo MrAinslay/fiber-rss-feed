@@ -45,6 +45,10 @@ func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
 }
 
 func HandlerDeleteFeedFollow(ctx *fiber.Ctx, usr config.User) {
+	type deleteResponse struct {
+		Message string `json:"message"`
+	}
+
 	followUUID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
@@ -63,5 +67,7 @@ func HandlerDeleteFeedFollow(ctx *fiber.Ctx, usr config.User) {
 	}
 
 	config.DBQueris.DeleteFeed(ctx.Context(), followUUID)
-	utils.RespondWithJSON(ctx, 201, fmt.Sprintf("Successfully deleted feed follow with id %s", followUUID))
+	utils.RespondWithJSON(ctx, 201, deleteResponse{
+		Message: fmt.Sprintf("Successfully deleted feed follow with id %s", followUUID),
+	})
 }

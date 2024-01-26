@@ -46,6 +46,10 @@ func HandlerGetPostLikesByUser(ctx *fiber.Ctx, usr config.User) {
 }
 
 func HandlerDeletePostLike(ctx *fiber.Ctx, usr config.User) {
+	type deleteResponse struct {
+		Message string `json:"message"`
+	}
+
 	likeUUID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
@@ -64,5 +68,7 @@ func HandlerDeletePostLike(ctx *fiber.Ctx, usr config.User) {
 	}
 
 	config.DBQueris.DeletePostLike(ctx.Context(), likeUUID)
-	utils.RespondWithJSON(ctx, 201, fmt.Sprintf("successfully deleted post like with id %s", likeUUID))
+	utils.RespondWithJSON(ctx, 201, deleteResponse{
+		Message: fmt.Sprintf("successfully deleted post like with id %s", likeUUID),
+	})
 }

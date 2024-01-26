@@ -180,7 +180,13 @@ func HandlerUpdateUser(ctx *fiber.Ctx, usr config.User) {
 }
 
 func HandlerDeleteUser(ctx *fiber.Ctx, usr config.User) {
+	type deleteResponse struct {
+		Message string `json:"message"`
+	}
+
 	config.DBQueris.DeleteUser(ctx.Context(), usr.ApiKey)
 
-	utils.RespondWithJSON(ctx, 201, fmt.Sprintf("Successfully deleted user with id %s", usr.ID))
+	utils.RespondWithJSON(ctx, 201, deleteResponse{
+		Message: fmt.Sprintf("Successfully deleted user with id %s", usr.ID),
+	})
 }

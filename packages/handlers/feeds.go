@@ -77,6 +77,10 @@ func HandlerGetFeedById(ctx *fiber.Ctx) {
 }
 
 func HandlerDeleteFeed(ctx *fiber.Ctx, usr config.User) {
+	type deleteResponse struct {
+		Message string `json:"message"`
+	}
+
 	feedUUID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		utils.RespondWithErr(ctx, 400, fmt.Sprint(err))
@@ -95,5 +99,7 @@ func HandlerDeleteFeed(ctx *fiber.Ctx, usr config.User) {
 	}
 
 	config.DBQueris.DeleteFeed(ctx.Context(), feed.ID)
-	utils.RespondWithJSON(ctx, 201, fmt.Sprintf("Successfully deleted feed with id %s", feedUUID))
+	utils.RespondWithJSON(ctx, 201, deleteResponse{
+		Message: fmt.Sprintf("Successfully deleted feed with id %s", feedUUID),
+	})
 }
