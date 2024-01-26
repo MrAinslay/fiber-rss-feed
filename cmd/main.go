@@ -6,8 +6,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/MrAinslay/fiber-rss-feed/cmd/cli"
-	"github.com/MrAinslay/fiber-rss-feed/internal/api"
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
 	"github.com/MrAinslay/fiber-rss-feed/packages/routes"
 	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
@@ -30,12 +28,7 @@ func main() {
 	app := fiber.New()
 	routes.RegisterFeedRoutes(app)
 
-	client := api.NewClient(5 * time.Second)
-	go cli.StartRepl(&cli.ApiConfig{
-		ApiClient: client,
-		ApiKey:    "",
-	})
-
 	go utils.StartScraping(10, time.Minute)
+
 	log.Fatal(app.Listen(8080))
 }
