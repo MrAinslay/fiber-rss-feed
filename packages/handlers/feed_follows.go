@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
+	"github.com/MrAinslay/fiber-rss-feed/packages/models"
 	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
 	"github.com/gofiber/fiber"
 	"github.com/google/uuid"
@@ -16,7 +17,7 @@ func HandlerGetUserFeedFollows(ctx *fiber.Ctx, usr config.User) {
 		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
 	}
 
-	utils.RespondWithJSON(ctx, 201, follows)
+	utils.RespondWithJSON(ctx, 201, models.DatabaseFeedFollowsToFeedFollows(follows))
 }
 
 func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
@@ -30,7 +31,7 @@ func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
 		return
 	}
 
-	feedFollows, err := config.DBQueris.CreateFeedFollow(ctx.Context(), config.CreateFeedFollowParams{
+	feedFollow, err := config.DBQueris.CreateFeedFollow(ctx.Context(), config.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UserID:    usr.ID,
@@ -41,7 +42,7 @@ func HandlerCreateFeedFollow(ctx *fiber.Ctx, usr config.User) {
 		return
 	}
 
-	utils.RespondWithJSON(ctx, 200, feedFollows)
+	utils.RespondWithJSON(ctx, 200, models.DatabaseFeedFollowToFeedFollow(feedFollow))
 }
 
 func HandlerDeleteFeedFollow(ctx *fiber.Ctx, usr config.User) {

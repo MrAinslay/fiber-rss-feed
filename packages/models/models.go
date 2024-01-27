@@ -8,6 +8,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type PostLike struct {
+	Id        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	UserId    uuid.UUID `json:"user_id"`
+	PostId    uuid.UUID `json:"post_id"`
+}
+
 type FeedFollow struct {
 	Id        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
@@ -35,6 +43,24 @@ type Feed struct {
 	Name          string       `json:"name"`
 	Url           string       `json:"url"`
 	LastFetchedAt sql.NullTime `json:"last_fetched_at"`
+}
+
+func DatabasePostLikeToPostLike(postLike config.PostLike) PostLike {
+	return PostLike{
+		Id:        postLike.ID,
+		CreatedAt: postLike.CreatedAt,
+		UpdatedAt: postLike.UpdatedAt,
+		UserId:    postLike.UserID,
+		PostId:    postLike.PostID,
+	}
+}
+
+func DatabasePostLikesToPostLikes(postLikes []config.PostLike) []PostLike {
+	result := make([]PostLike, len(postLikes))
+	for index, postLike := range postLikes {
+		result[index] = DatabasePostLikeToPostLike(postLike)
+	}
+	return result
 }
 
 func DatabaseFeedFollowToFeedFollow(feedFollow config.FeedFollow) FeedFollow {

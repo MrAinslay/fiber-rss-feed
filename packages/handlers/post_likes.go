@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
+	"github.com/MrAinslay/fiber-rss-feed/packages/models"
 	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
 	"github.com/gofiber/fiber"
 	"github.com/google/uuid"
@@ -32,7 +33,7 @@ func HandlerCreatePostLike(ctx *fiber.Ctx, usr config.User) {
 		return
 	}
 
-	utils.RespondWithJSON(ctx, 200, like)
+	utils.RespondWithJSON(ctx, 200, models.DatabasePostLikeToPostLike(like))
 }
 
 func HandlerGetPostLikesByUser(ctx *fiber.Ctx, usr config.User) {
@@ -42,7 +43,7 @@ func HandlerGetPostLikesByUser(ctx *fiber.Ctx, usr config.User) {
 		return
 	}
 
-	utils.RespondWithJSON(ctx, 201, likes)
+	utils.RespondWithJSON(ctx, 201, models.DatabasePostLikesToPostLikes(likes))
 }
 
 func HandlerDeletePostLike(ctx *fiber.Ctx, usr config.User) {

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
+	"github.com/MrAinslay/fiber-rss-feed/packages/models"
 	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
 	"github.com/gofiber/fiber"
 	"github.com/google/uuid"
@@ -59,7 +60,7 @@ func HandlerGetFeeds(ctx *fiber.Ctx) {
 		return
 	}
 
-	utils.RespondWithJSON(ctx, 200, feeds)
+	utils.RespondWithJSON(ctx, 200, models.DatabaseFeedsToFeeds(feeds))
 }
 
 func HandlerGetFeedById(ctx *fiber.Ctx) {
@@ -75,7 +76,7 @@ func HandlerGetFeedById(ctx *fiber.Ctx) {
 		return
 	}
 
-	utils.RespondWithJSON(ctx, 201, feed)
+	utils.RespondWithJSON(ctx, 201, models.DatabaseFeedToFeed(feed))
 }
 
 func HandlerDeleteFeed(ctx *fiber.Ctx, usr config.User) {
