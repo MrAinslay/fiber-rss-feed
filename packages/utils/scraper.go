@@ -78,7 +78,7 @@ func scrapeFeed(wg *sync.WaitGroup, feed config.Feed) {
 			Title:       item.Title,
 			Url:         item.Link,
 			Description: item.Description,
-			PublishedAt: time.Now(),
+			PublishedAt: item.PubDate,
 			FeedID:      feed.ID,
 		})
 		log.Println("Fount post", item.Title)

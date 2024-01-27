@@ -37,7 +37,7 @@ type Feed struct {
 	LastFetchedAt sql.NullTime `json:"last_fetched_at"`
 }
 
-func databaseFeedFollowToFeedFollow(feedFollow config.FeedFollow) FeedFollow {
+func DatabaseFeedFollowToFeedFollow(feedFollow config.FeedFollow) FeedFollow {
 	return FeedFollow{
 		Id:        feedFollow.ID,
 		CreatedAt: feedFollow.CreatedAt,
@@ -47,15 +47,15 @@ func databaseFeedFollowToFeedFollow(feedFollow config.FeedFollow) FeedFollow {
 	}
 }
 
-func databaseFeedFollowsToFeedFollows(feedFollows []config.FeedFollow) []FeedFollow {
+func DatabaseFeedFollowsToFeedFollows(feedFollows []config.FeedFollow) []FeedFollow {
 	result := make([]FeedFollow, len(feedFollows))
 	for index, feedFollow := range feedFollows {
-		result[index] = databaseFeedFollowToFeedFollow(feedFollow)
+		result[index] = DatabaseFeedFollowToFeedFollow(feedFollow)
 	}
 	return result
 }
 
-func databaseFeedToFeed(feed config.Feed) Feed {
+func DatabaseFeedToFeed(feed config.Feed) Feed {
 	return Feed{
 		Id:            feed.ID,
 		CreatedAt:     feed.CreatedAt,
@@ -67,15 +67,15 @@ func databaseFeedToFeed(feed config.Feed) Feed {
 	}
 }
 
-func databaseFeedsToFeeds(feeds []config.Feed) []Feed {
+func DatabaseFeedsToFeeds(feeds []config.Feed) []Feed {
 	result := make([]Feed, len(feeds))
 	for index, feed := range feeds {
-		result[index] = databaseFeedToFeed(feed)
+		result[index] = DatabaseFeedToFeed(feed)
 	}
 	return result
 }
 
-func databasePostToPost(post config.Post) Post {
+func DatabasePostToPost(post config.Post) Post {
 	return Post{
 		Id:          post.ID,
 		CreatedAt:   post.CreatedAt,
@@ -88,10 +88,10 @@ func databasePostToPost(post config.Post) Post {
 	}
 }
 
-func databasePostsToPosts(posts []config.Post) []Post {
+func DatabasePostsToPosts(posts []config.Post) []Post {
 	result := make([]Post, len(posts))
 	for index, post := range posts {
-		result[index] = databasePostToPost(post)
+		result[index] = DatabasePostToPost(post)
 	}
 	return result
 }

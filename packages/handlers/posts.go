@@ -4,21 +4,14 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/MrAinslay/fiber-rss-feed/packages/config"
+	"github.com/MrAinslay/fiber-rss-feed/packages/models"
 	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
 	"github.com/gofiber/fiber"
-	"github.com/google/uuid"
 )
 
 func HandlerGetPostsByUser(ctx *fiber.Ctx, usr config.User) {
-	type payload struct {
-		Id        uuid.UUID `json:"id"`
-		CreatedAt time.Time `json:"created_at"`
-		UserId    uuid.UUID `json:"user_id"`
-		FeedId    uuid.UUID `json:"feed_id`
-	}
 
 	limitQry := ctx.Query("limit")
 	limit := 10
@@ -43,5 +36,5 @@ func HandlerGetPostsByUser(ctx *fiber.Ctx, usr config.User) {
 		return
 	}
 
-	utils.RespondWithJSON(ctx, 201, posts)
+	utils.RespondWithJSON(ctx, 201, models.DatabasePostsToPosts(posts))
 }
