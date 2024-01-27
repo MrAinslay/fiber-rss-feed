@@ -13,4 +13,4 @@ REFERENCES users(id)
 );
 
 -- +goose Down
-DROP TABLE feed;
+DROP TABLE feeds;
