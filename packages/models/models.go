@@ -8,6 +8,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type FeedFollow struct {
+	Id        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	UserId    uuid.UUID `json:"user_id"`
+	FeedId    uuid.UUID `json:"feed_id"`
+}
+
 type Post struct {
 	Id          uuid.UUID `json:"id"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -29,6 +37,24 @@ type Feed struct {
 	LastFetchedAt sql.NullTime `json:"last_fetched_at"`
 }
 
+func databaseFeedFollowToFeedFollow(feedFollow config.FeedFollow) FeedFollow {
+	return FeedFollow{
+		Id:        feedFollow.ID,
+		CreatedAt: feedFollow.CreatedAt,
+		UpdatedAt: feedFollow.UpdatedAt,
+		UserId:    feedFollow.UserID,
+		FeedId:    feedFollow.FeedID,
+	}
+}
+
+func databaseFeedFollowsToFeedFollows(feedFollows []config.FeedFollow) []FeedFollow {
+	result := make([]FeedFollow, len(feedFollows))
+	for index, feedFollow := range feedFollows {
+		result[index] = databaseFeedFollowToFeedFollow(feedFollow)
+	}
+	return result
+}
+
 func databaseFeedToFeed(feed config.Feed) Feed {
 	return Feed{
 		Id:            feed.ID,
@@ -43,6 +69,10 @@ func databaseFeedToFeed(feed config.Feed) Feed {
 
 func databaseFeedsToFeeds(feeds []config.Feed) []Feed {
 	result := make([]Feed, len(feeds))
+	for index, feed := range feeds {
+		result[index] = databaseFeedToFeed(feed)
+	}
+	return result
 }
 
 func databasePostToPost(post config.Post) Post {
