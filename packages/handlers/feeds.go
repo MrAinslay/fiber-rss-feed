@@ -19,6 +19,7 @@ func HandlerCreateFeed(ctx *fiber.Ctx, usr config.User) {
 		Id        uuid.UUID `json:"id"`
 		CreatedAt time.Time `json:"created_at"`
 		UpdatedAt time.Time `json:"updated_at"`
+		UserId    uuid.UUID `json:"user_id"`
 		Name      string    `json:"name"`
 		URL       string    `json:"url"`
 	}
@@ -45,6 +46,7 @@ func HandlerCreateFeed(ctx *fiber.Ctx, usr config.User) {
 		Id:        feed.ID,
 		CreatedAt: feed.CreatedAt,
 		UpdatedAt: feed.UpdatedAt,
+		UserId:    usr.ID,
 		Name:      feed.Name,
 		URL:       feed.Url,
 	})
