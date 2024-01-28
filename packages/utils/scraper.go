@@ -81,7 +81,7 @@ func scrapeFeed(wg *sync.WaitGroup, feed config.Feed) {
 			PublishedAt: item.PubDate,
 			FeedID:      feed.ID,
 		})
-		log.Println("Fount post", item.Title)
+		log.Println("Found post", item.Title)
 	}
 	log.Printf("Feed %s collected, %v posts found", feed.Name, len(feedData.Channel.Item))
 }
