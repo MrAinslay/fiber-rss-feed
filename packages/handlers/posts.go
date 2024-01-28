@@ -9,6 +9,7 @@ import (
 	"github.com/MrAinslay/fiber-rss-feed/packages/models"
 	"github.com/MrAinslay/fiber-rss-feed/packages/utils"
 	"github.com/gofiber/fiber"
+	"github.com/google/uuid"
 )
 
 func HandlerGetPostsByUser(ctx *fiber.Ctx, usr config.User) {
@@ -37,4 +38,20 @@ func HandlerGetPostsByUser(ctx *fiber.Ctx, usr config.User) {
 	}
 
 	utils.RespondWithJSON(ctx, 201, models.DatabasePostsToPosts(posts))
+}
+
+func HandlerGetPostsById(ctx *fiber.Ctx) {
+	postUUID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+		return
+	}
+
+	post, err := config.DBQueris.GetPostById(ctx.Context(), postUUID)
+	if err != nil {
+		utils.RespondWithErr(ctx, 401, fmt.Sprint(err))
+		return
+	}
+
+	utils.RespondWithJSON(ctx, 201, models.DatabasePostToPost(post))
 }

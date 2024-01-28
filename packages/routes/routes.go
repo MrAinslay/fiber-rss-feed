@@ -23,6 +23,7 @@ var RegisterFeedRoutes = func(app *fiber.App) {
 	app.Delete("/v1/api/feed-follows/:id", middleware.MiddlewareAuth(handlers.HandlerDeleteFeedFollow))
 
 	app.Get("/v1/api/posts", middleware.MiddlewareAuth(handlers.HandlerGetPostsByUser))
+	app.Get("/v1/api/posts/:id", handlers.HandlerGetPostsById)
 
 	app.Get("/v1/api/post-likes", middleware.MiddlewareAuth(handlers.HandlerGetPostLikesByUser))
 	app.Post("/v1/api/post-likes", middleware.MiddlewareAuth(handlers.HandlerCreatePostLike))
