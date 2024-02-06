@@ -13,6 +13,7 @@ func RespondWithErr(ctx *fiber.Ctx, code int, msg string) {
 	type errorRespone struct {
 		ErrorMsg string `json:"error"`
 	}
+
 	RespondWithJSON(ctx, code, errorRespone{
 		ErrorMsg: msg,
 	})
