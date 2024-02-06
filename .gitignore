@@ -21,5 +21,4 @@
 go.work
 
 # Key enviroment variables
-
-*.env
+key.env
